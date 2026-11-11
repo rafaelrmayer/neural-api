@@ -15,3 +15,12 @@ def test_health_check():
         "service": "neural-api",
         "version": "0.1.0",
     }
+
+
+def test_list_models():
+    client = TestClient(app)
+
+    response = client.get("/v1/models")
+
+    assert response.status_code == 200
+    assert response.json() == []
