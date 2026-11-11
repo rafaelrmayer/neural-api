@@ -1,6 +1,7 @@
 
 from fastapi import FastAPI
 from app.schemas import ModelInfo
+from app.model_registry import get_available_models
 
 
 app = FastAPI(
@@ -21,4 +22,4 @@ def health_check():
 
 @app.get("/v1/models", response_model=list[ModelInfo], tags=["Models"])
 def list_models():
-    return []
+    return get_available_models()
