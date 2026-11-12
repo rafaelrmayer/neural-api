@@ -23,4 +23,4 @@ def test_list_models():
     response = client.get("/v1/models")
 
     assert response.status_code == 200
-    assert response.json() == []
+    assert response.json()[0]["name"] == "simple-network"

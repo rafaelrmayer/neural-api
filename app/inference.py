@@ -1,23 +1,36 @@
+"""Execução de modelos PyTorch para inferência."""
+
+import math
+
+import torch
+from torch import nn
 
 
-from typing import Any
+class ModelNotReadyError(RuntimeError):
+    """Não há modelo disponível para inferência."""
 
 
 class InferenceEngine:
-    """Motor responsável pela execução de modelos neurais."""
-
-    def __init__(self):
-        self.model = None
+    def __init__(self, model: nn.Module | None = None):
+        self.model = model
+        if self.model is not None:
+            self.model.eval()
 
     def is_ready(self) -> bool:
-        """Verifica se existe um modelo carregado."""
         return self.model is not None
 
-    def predict(self, input_data: Any) -> Any:
-        """Executa uma inferência utilizando o modelo carregado."""
-        if not self.is_ready():
-            raise RuntimeError(
-                "Nenhum modelo neural está carregado."
-            )
+    def predict(self, input_data: list[float]) -> float:
+        if self.model is None:
+            raise ModelNotReadyError("Nenhum modelo neural está carregado.")
+        if len(input_data) != 3 or not all(math.isfinite(v) for v in input_data):
+            raise ValueError("Informe exatamente três números finitos.")
 
-        return self.model(input_data)
+        inputs = torch.tensor([input_data], dtype=torch.float32)
+        if not torch.isfinite(inputs).all():
+            raise ValueError("Os valores excedem a capacidade numérica do modelo.")
+        self.model.eval()
+        with torch.inference_mode():
+            result = self.model(inputs).item()
+        if not math.isfinite(result):
+            raise ValueError("A entrada produziu um resultado não finito.")
+        return result
