@@ -86,3 +86,45 @@ não finita. Modelo indisponível retorna 503. `/health` informa que o serviço 
 ativo; `/v1/models` lista o modelo experimental.
 
 Execute os testes com `python -m pytest -q`.
+
+## Sugestões de cartões (demonstração)
+
+`POST /v1/cards/suggestions` ordena os cinco cartões, preservando seus IDs
+(0: comer, 1: Zelda, 2: descansar, 3: desenhar, 4: história).
+`fixed_options` sempre contém “Quero outra coisa.” e “Não quero agora.”.
+O consumidor deve manter todas as opções acessíveis. As sugestões são opções de
+comunicação; não inferem fome, sentimentos ou desejos.
+
+Configure `CARDS_MODEL_PATH` com o caminho do `modelo_cartoes_demo.pt` exportado
+pelo notebook. O arquivo deve conter state_dict, frases, opcoes_fixas,
+arquitetura [9, 16, 5] e dados_sinteticos=true. Use apenas arquivos de origem
+conhecida; o carregamento usa weights_only=True, em CPU. Os pesos não estão
+incluídos no repositório e não são gerados durante a inicialização.
+
+```bash
+CARDS_MODEL_PATH=/caminho/modelo_cartoes_demo.pt uvicorn app.main:app --reload
+```
+
+Exemplo de corpo da requisição:
+
+```json
+{"period": "tarde", "last_activity": 1}
+```
+
+`period` aceita manha, tarde ou noite. `last_activity` aceita os IDs de 0 a 4,
+ou null/omitido para ausência de histórico. A entrada usa one-hot do período
+(três posições), seguido da última atividade (seis posições; a última significa
+sem histórico). A resposta traz model=cards-demo, experimental=true,
+synthetic_data=true, cards (id e phrase) e fixed_options. Não expõe pontuações
+como probabilidades de preferência.
+
+Sem arquivo válido, a rota retorna 503; contratos inválidos retornam 422.
+O serviço e a rota experimental original continuam disponíveis. `/v1/models`
+continua listando o modelo da rota `/v1/predict`; o modelo opcional de cartões
+é identificado na própria resposta de sugestões.
+
+O treinamento do Colab usa dados sintéticos com preferência artificial por
+repetição. Na execução observada, a rede acertou 55,3% e a regra simples 57,3%:
+não há evidência de vantagem do modelo nem de personalização para a Bia.
+Este endpoint serve para validar a integração. Não registra escolhas ou dados
+pessoais e ainda não integra a interface da Jornada de Bia.

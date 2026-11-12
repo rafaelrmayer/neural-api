@@ -1,3 +1,6 @@
+import logging
+import os
+
 
 from contextlib import asynccontextmanager
 
@@ -6,12 +9,22 @@ from app.schemas import ModelInfo, PredictionRequest, PredictionResponse
 from app.model_registry import MODEL_NAME, get_available_models
 from app.inference import InferenceEngine, ModelNotReadyError
 from app.models.simple_network import SimpleNeuralNetwork
+from app.cards import CardEngine, OPCOES_FIXAS
+from app.schemas import CardSuggestionRequest, CardSuggestionResponse
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     app.state.engine = InferenceEngine(SimpleNeuralNetwork())
+    app.state.card_engine = None
+    path = os.environ.get("CARDS_MODEL_PATH")
+    if path:
+        try:
+            app.state.card_engine = CardEngine(path)
+        except Exception:
+            logging.getLogger(__name__).exception("Falha ao carregar modelo de cartões")
     yield
+    app.state.card_engine = None
     app.state.engine = None
 
 
@@ -55,3 +68,21 @@ def predict(payload: PredictionRequest, request: Request):
     except ValueError as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc
     return PredictionResponse(prediction=prediction, model=MODEL_NAME)
+
+
+@app.post(
+    "/v1/cards/suggestions",
+    response_model=CardSuggestionResponse,
+    tags=["Cards"],
+    summary="Ordena todos os cartões com modelo de demonstração sintético",
+    responses={503: {"description": "Modelo de cartões indisponível"}},
+)
+def suggest_cards(payload: CardSuggestionRequest, request: Request):
+    engine = getattr(request.app.state, "card_engine", None)
+    if engine is None:
+        raise HTTPException(503, "Modelo de cartões indisponível.")
+    try:
+        cards = engine.suggest(payload.period, payload.last_activity)
+    except ValueError as exc:
+        raise HTTPException(503, "Modelo de cartões indisponível.") from exc
+    return CardSuggestionResponse(cards=cards, fixed_options=OPCOES_FIXAS.copy())
