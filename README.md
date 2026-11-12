@@ -143,3 +143,37 @@ regra simples. Exporta o checkpoint e verifica igualdade exata após recarregá-
 Para repetir resultados numéricos, use a mesma versão do PyTorch (registrada no
 checkpoint); versões/plataformas diferentes podem produzir pequenas diferenças.
 O script não lê dados da Bia nem altera o modelo da rota /v1/predict.
+
+## Hospedagem HTTPS (contêiner)
+
+O Dockerfile executa a API na porta 7860 com usuário sem privilégios e gera o
+modelo sintético durante a construção. Não exige upload de pesos. O HTTPS deve
+ser fornecido pela hospedagem na frente do contêiner; não é ativado pelo Uvicorn.
+
+A variável CORS_ALLOWED_ORIGINS aceita origens separadas por vírgula, sem barra
+final ou caminho. O contêiner permite por padrão https://rafaelrmayer.github.io.
+Essa configuração permite chamadas pelo navegador da Jornada; CORS não é
+autenticação. Não envie dados pessoais: este serviço é uma demonstração pública.
+Sem a variável, a execução direta não permite chamadas entre origens.
+
+No frontend, configure apenas o endereço base HTTPS publicado pelo provedor,
+sem /docs ou /v1/cards/suggestions. A hospedagem pode suspender instâncias
+inativas; os cartões devem continuar utilizáveis quando a API estiver indisponível.
+
+### Publicar em Hugging Face Spaces
+
+1. Crie um Space público com SDK Docker, template Blank e hardware CPU básico.
+   Confira os custos/limites exibidos pelo provedor antes de confirmar.
+2. Envie Dockerfile, requirements.txt e as pastas app e scripts a esse Space.
+   Preserve o README de metadados criado pelo Hugging Face (`sdk: docker` e
+   `app_port: 7860` no cabeçalho YAML). Não envie dados pessoais ou segredos.
+3. Aguarde a construção. Ela instala PyTorch CPU e gera o modelo sintético.
+4. Abra o endereço HTTPS direto do aplicativo, terminado em .hf.space, e teste
+   /health e /docs. O endereço da página huggingface.co/spaces/... não é a URL
+   base da API.
+5. Na Jornada de Bia, em Configurações, salve o endereço base .hf.space e peça
+   sugestões em Minha Comunicação. A origem GitHub Pages já está permitida pelo
+   Dockerfile. Para outro domínio, ajuste CORS_ALLOWED_ORIGINS.
+
+A imagem Docker e o deploy remoto precisam ser verificados na hospedagem.
+Não considere o serviço publicado apenas porque o código foi integrado no GitHub.
