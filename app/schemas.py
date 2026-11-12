@@ -16,3 +16,26 @@ class PredictionResponse(BaseModel):
     prediction: float = Field(allow_inf_nan=False)
     model: str
     experimental: bool = True
+
+
+from typing import Literal
+from pydantic import ConfigDict
+
+
+class CardSuggestionRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    period: Literal["manha", "tarde", "noite"]
+    last_activity: int | None = Field(default=None, ge=0, le=4, strict=True)
+
+
+class SuggestedCard(BaseModel):
+    id: int
+    phrase: str
+
+
+class CardSuggestionResponse(BaseModel):
+    model: Literal["cards-demo"] = "cards-demo"
+    experimental: Literal[True] = True
+    synthetic_data: Literal[True] = True
+    cards: list[SuggestedCard]
+    fixed_options: list[str]
