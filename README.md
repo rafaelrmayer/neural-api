@@ -128,3 +128,18 @@ repetição. Na execução observada, a rede acertou 55,3% e a regra simples 57,
 não há evidência de vantagem do modelo nem de personalização para a Bia.
 Este endpoint serve para validar a integração. Não registra escolhas ou dados
 pessoais e ainda não integra a interface da Jornada de Bia.
+
+### Gerar o modelo sem arquivo prévio
+
+Na raiz do projeto, após instalar requirements.txt:
+
+```bash
+python -m scripts.train_cards_demo --output /content/modelo_cartoes_demo.pt
+```
+
+O script usa a semente 42, CPU e algoritmos determinísticos, gera 1.500 exemplos,
+separa 1.200 para treino e 300 para teste, treina por 200 épocas e compara com a
+regra simples. Exporta o checkpoint e verifica igualdade exata após recarregá-lo.
+Para repetir resultados numéricos, use a mesma versão do PyTorch (registrada no
+checkpoint); versões/plataformas diferentes podem produzir pequenas diferenças.
+O script não lê dados da Bia nem altera o modelo da rota /v1/predict.
