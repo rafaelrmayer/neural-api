@@ -5,6 +5,7 @@ import os
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException, Request
+from fastapi.middleware.cors import CORSMiddleware
 from app.schemas import ModelInfo, PredictionRequest, PredictionResponse
 from app.model_registry import MODEL_NAME, get_available_models
 from app.inference import InferenceEngine, ModelNotReadyError
@@ -35,6 +36,17 @@ app = FastAPI(
     version="0.1.0",
 )
 
+
+# Origens explícitas para o frontend; sem credenciais ou curingas.
+allowed_origins = [value.strip() for value in os.environ.get("CORS_ALLOWED_ORIGINS", "").split(",") if value.strip()]
+if allowed_origins:
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=allowed_origins,
+        allow_methods=["POST"],
+        allow_headers=["Content-Type"],
+        allow_credentials=False,
+    )
 
 @app.get("/health", tags=["Health"])
 def health_check():
