@@ -11,12 +11,15 @@ from app.model_registry import MODEL_NAME, get_available_models
 from app.inference import InferenceEngine, ModelNotReadyError
 from app.models.simple_network import SimpleNeuralNetwork
 from app.cards import CardEngine, OPCOES_FIXAS
+from app.random_forest_cards import RandomForestCards
+from app.schemas import RandomForestCardRequest, RandomForestCardResponse
 from app.schemas import CardSuggestionRequest, CardSuggestionResponse
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     app.state.engine = InferenceEngine(SimpleNeuralNetwork())
+    app.state.rf_cards = RandomForestCards()
     app.state.card_engine = None
     path = os.environ.get("CARDS_MODEL_PATH")
     if path:
@@ -98,3 +101,15 @@ def suggest_cards(payload: CardSuggestionRequest, request: Request):
     except ValueError as exc:
         raise HTTPException(503, "Modelo de cartões indisponível.") from exc
     return CardSuggestionResponse(cards=cards, fixed_options=OPCOES_FIXAS.copy())
+
+
+@app.post('/v1/cards/random-forest/suggestions', response_model=RandomForestCardResponse,
+          tags=['Cards'], summary='Ordenação experimental por Random Forest sintético')
+def suggest_rf_cards(payload: RandomForestCardRequest, request: Request):
+    engine = getattr(request.app.state, 'rf_cards', None)
+    if engine is None:
+        raise HTTPException(503, 'Modelo experimental indisponível.')
+    return RandomForestCardResponse(
+        cards=engine.suggest(payload.period, payload.last_activity, payload.allowed_card_ids),
+        fixed_options=OPCOES_FIXAS.copy(),
+    )
