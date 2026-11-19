@@ -181,3 +181,9 @@ Não considere o serviço publicado apenas porque o código foi integrado no Git
 ## Cartões por Random Forest
 
 O endpoint experimental `/v1/cards/random-forest/suggestions` adiciona uma floresta categórica treinada com dados sintéticos, sem histórico real ou aprendizado por consulta. Mantém o catálogo de demonstração e aceita uma lista de cartões permitidos. Veja [RANDOM_FOREST_API.md](RANDOM_FOREST_API.md) para contrato, limitações, publicação e integração opcional.
+
+## Projeto e demonstração
+
+[PROJETO_NEURAL_API.md](PROJETO_NEURAL_API.md) apresenta objetivo, arquitetura, modelos, resultados e um roteiro de apresentação. [examples/neural-api.http](examples/neural-api.http) contém requisições prontas para experimentar.
+
+Para registrar respostas reais da sua execução local, use `python -m scripts.demo_api --base-url http://127.0.0.1:8000 --output demonstracao.json`. Os exemplos usam apenas dados sintéticos. A rede simples não tem treinamento, e a demonstração visual com cenários registrados não substitui um teste do serviço hospedado.

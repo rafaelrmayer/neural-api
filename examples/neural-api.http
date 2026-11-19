@@ -1,0 +1,39 @@
+# Exemplos sintéticos para VS Code REST Client ou ferramenta HTTP compatível.
+# Não exige chave; não inclua dados pessoais.
+@base = http://127.0.0.1:8000
+
+### 1. Serviço disponível (não comprova checkpoint de cartões carregado)
+GET {{base}}/health
+
+### 2. Catálogo declarado
+GET {{base}}/v1/models
+
+### 3. Rede simples 3 → 8 → 1; pesos aleatórios, sem significado preditivo
+POST {{base}}/v1/predict
+Content-Type: application/json
+
+{"inputs":[1.0,2.0,3.0]}
+
+### 4. Rede de cartões 9 → 16 → 5, treinada com dados sintéticos
+POST {{base}}/v1/cards/suggestions
+Content-Type: application/json
+
+{"period":"tarde","last_activity":0}
+
+### 5. Random Forest sintético: catálogo completo
+POST {{base}}/v1/cards/random-forest/suggestions
+Content-Type: application/json
+
+{"period":"tarde","last_activity":0}
+
+### 6. Random Forest: limitar aos cartões permitidos
+POST {{base}}/v1/cards/random-forest/suggestions
+Content-Type: application/json
+
+{"period":"noite","last_activity":2,"allowed_card_ids":[0,2,4]}
+
+### 7. Validação: deve recusar campos extras com 422
+POST {{base}}/v1/cards/random-forest/suggestions
+Content-Type: application/json
+
+{"period":"manha","unknown_field":true}
