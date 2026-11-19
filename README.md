@@ -177,3 +177,7 @@ inativas; os cartões devem continuar utilizáveis quando a API estiver indispon
 
 A imagem Docker e o deploy remoto precisam ser verificados na hospedagem.
 Não considere o serviço publicado apenas porque o código foi integrado no GitHub.
+
+## Cartões por Random Forest
+
+O endpoint experimental `/v1/cards/random-forest/suggestions` adiciona uma floresta categórica treinada com dados sintéticos, sem histórico real ou aprendizado por consulta. Mantém o catálogo de demonstração e aceita uma lista de cartões permitidos. Veja [RANDOM_FOREST_API.md](RANDOM_FOREST_API.md) para contrato, limitações, publicação e integração opcional.

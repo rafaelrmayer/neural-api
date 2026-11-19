@@ -7,7 +7,8 @@ MODELS = [
         name=MODEL_NAME,
         version="0.1.0",
         description="Rede experimental com pesos aleatórios, sem treinamento; apenas para validar a integração.",
-    )
+    ),
+    ModelInfo(name="cards-rf-demo",version="1.0.0",description="Random Forest categórico com 31 árvores e dados sintéticos; votos não são probabilidades calibradas."),
 ]
 
 
