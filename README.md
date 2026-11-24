@@ -187,3 +187,9 @@ O endpoint experimental `/v1/cards/random-forest/suggestions` adiciona uma flore
 [PROJETO_NEURAL_API.md](PROJETO_NEURAL_API.md) apresenta objetivo, arquitetura, modelos, resultados e um roteiro de apresentação. [examples/neural-api.http](examples/neural-api.http) contém requisições prontas para experimentar.
 
 Para registrar respostas reais da sua execução local, use `python -m scripts.demo_api --base-url http://127.0.0.1:8000 --output demonstracao.json`. Os exemplos usam apenas dados sintéticos. A rede simples não tem treinamento, e a demonstração visual com cenários registrados não substitui um teste do serviço hospedado.
+
+## RapidAPI
+
+A integração oferece as cinco operações também sob `/rapidapi`, autenticadas pelo Proxy Secret do gateway. Configure `RAPIDAPI_PROXY_SECRET` somente no ambiente do Render e use a Base URL `https://neural-api-s064.onrender.com/rapidapi` no RapidAPI, após o deploy.
+
+O [roteiro RapidAPI](docs/RAPIDAPI.md) descreve configuração, testes e diagnóstico. O namespace retorna 503 sem segredo e 403 para credencial ausente/inválida. As rotas públicas existentes permanecem disponíveis para demonstrações e integrações; as cotas do marketplace não são limites globais da API. A publicação da listagem continua separada da implantação do código.
