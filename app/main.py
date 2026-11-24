@@ -6,6 +6,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
+from app.rapidapi import RapidAPIGateway
 from app.schemas import ModelInfo, PredictionRequest, PredictionResponse
 from app.model_registry import MODEL_NAME, get_available_models
 from app.inference import InferenceEngine, ModelNotReadyError
@@ -38,6 +39,8 @@ app = FastAPI(
     description="API independente para inferência de redes neurais artificiais.",
     version="0.1.0",
 )
+
+app.add_middleware(RapidAPIGateway)
 
 
 # Origens explícitas para o frontend; sem credenciais ou curingas.
