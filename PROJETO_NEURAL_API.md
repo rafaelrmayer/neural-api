@@ -57,7 +57,7 @@ A rede simples não foi treinada: sua saída numérica não tem significado clí
 5. Usar “Copiar curl” ou `examples/neural-api.http` para executar chamadas reais em outra ferramenta.
 6. Mostrar as limitações e a decisão de manter a escolha com a pessoa.
 
-A disponibilidade do serviço público deve ser conferida antes de uma apresentação. Nesta preparação, uma consulta pública não respondeu em 20 segundos; isso não comprova falha permanente. Os exemplos foram verificados localmente.
+A disponibilidade do serviço público deve ser conferida antes de uma apresentação. Em 24/11/2026, as cinco rotas responderam 200 em testes pontuais no Render; o responsável também confirmou os testes no gateway e a [publicação no RapidAPI](https://rapidapi.com/RafaelMayer/api/neural-api). Isso não é teste de carga ou garantia de disponibilidade contínua. A demonstração visual continua independente do serviço, com cenários registrados localmente.
 
 ## Executar localmente
 

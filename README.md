@@ -3,9 +3,12 @@
 
 API independente para desenvolvimento, inferência e integração de modelos de redes neurais artificiais.
 
-**Versão planejada:** V0.1  
-**Status:** Primeira integração experimental de inferência
+**Versão:** V0.1
+
+**Status:** Demonstração experimental publicada no RapidAPI
 **Responsável:** Rafael Ricardo Mayer — Pesquisador independente
+
+[Usar no RapidAPI](https://rapidapi.com/RafaelMayer/api/neural-api) · [Documentação do serviço](https://neural-api-s064.onrender.com/docs)
 
 ## Objetivo
 
@@ -175,8 +178,7 @@ inativas; os cartões devem continuar utilizáveis quando a API estiver indispon
    sugestões em Minha Comunicação. A origem GitHub Pages já está permitida pelo
    Dockerfile. Para outro domínio, ajuste CORS_ALLOWED_ORIGINS.
 
-A imagem Docker e o deploy remoto precisam ser verificados na hospedagem.
-Não considere o serviço publicado apenas porque o código foi integrado no GitHub.
+A hospedagem atual no Render foi conferida em 24/11/2026 e a publicação no RapidAPI foi confirmada pelo responsável. O roteiro de Hugging Face acima é uma alternativa de implantação; não indica um Space publicado. Testes pontuais não garantem disponibilidade contínua.
 
 ## Cartões por Random Forest
 
@@ -190,6 +192,8 @@ Para registrar respostas reais da sua execução local, use `python -m scripts.d
 
 ## RapidAPI
 
-A integração oferece as cinco operações também sob `/rapidapi`, autenticadas pelo Proxy Secret do gateway. Configure `RAPIDAPI_PROXY_SECRET` somente no ambiente do Render e use a Base URL `https://neural-api-s064.onrender.com/rapidapi` no RapidAPI, após o deploy.
+A [Neural API está pública no RapidAPI](https://rapidapi.com/RafaelMayer/api/neural-api), conforme confirmação do responsável em **24/11/2026**. O Basic está configurado a **US$ 0/mês**, com **1.000 chamadas/mês (Hard Limit)** e **10 chamadas/minuto**. Conferir separadamente as condições de banda da plataforma; o preço da assinatura não garante ausência de qualquer taxa da plataforma.
+
+As cinco operações também são oferecidas sob `/rapidapi`, autenticadas pelo Proxy Secret do gateway. O segredo foi cadastrado diretamente no Render pelo responsável; a Base URL da listagem é `https://neural-api-s064.onrender.com/rapidapi`. Os testes no gateway e a recusa do acesso sem credencial foram confirmados, incluindo as duas rotas de cartões após a mudança da Base URL.
 
 O [roteiro RapidAPI](docs/RAPIDAPI.md) descreve configuração, testes e diagnóstico. O namespace retorna 503 sem segredo e 403 para credencial ausente/inválida. As rotas públicas existentes permanecem disponíveis para demonstrações e integrações; as cotas do marketplace não são limites globais da API. A publicação da listagem continua separada da implantação do código.

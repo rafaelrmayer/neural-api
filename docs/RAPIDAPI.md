@@ -1,11 +1,13 @@
 # Integração da Neural API com o RapidAPI
 
-A listagem foi criada como privada pelo responsável. As cinco operações foram testadas pelo gateway com a origem pública anterior e retornaram 200; o plano Basic gratuito foi configurado pelo responsável com 1.000 chamadas/mês (Hard Limit) e 10 chamadas/minuto. A configuração do namespace protegido abaixo ainda precisa ser aplicada e testada após o deploy. Este documento não declara publicação pública nem comprova aplicação das cotas à conta consumidora.
+A [Neural API está pública no RapidAPI](https://rapidapi.com/RafaelMayer/api/neural-api), conforme confirmação do responsável em **24/11/2026**. O Basic está configurado a **US$ 0/mês**, com **1.000 chamadas/mês (Hard Limit)** e **10 chamadas/minuto**. A taxa de banda da plataforma, se aplicável, é separada da assinatura; conferir as condições atuais na conta.
+
+As cinco operações foram testadas no gateway; após o deploy da proteção, o responsável confirmou novamente o health check e os dois POSTs de cartões com 200, além da recusa do acesso direto sem segredo. A descrição foi revisada e a visibilidade pública confirmada pelo responsável. Os testes não comprovam aplicação das cotas a uma conta consumidora nem disponibilidade contínua.
 
 ## Origem e caminhos
 
 - Serviço público: `https://neural-api-s064.onrender.com`
-- Base URL para o RapidAPI após este deploy: `https://neural-api-s064.onrender.com/rapidapi`
+- Base URL configurada no RapidAPI: `https://neural-api-s064.onrender.com/rapidapi`
 - Painel de administração do Render não é a Base URL.
 
 O namespace `/rapidapi` permite somente:
@@ -20,7 +22,7 @@ O namespace `/rapidapi` permite somente:
 
 O gateway acrescenta `X-RapidAPI-Proxy-Secret` em cada requisição. O middleware compara esse valor com a variável de ambiente `RAPIDAPI_PROXY_SECRET`, usando comparação em tempo constante. O consumidor continua usando sua chave RapidAPI; não deve receber o Proxy Secret.
 
-## Implantação pelo navegador
+## Configuração e manutenção pelo navegador
 
 1. Fazer merge do PR e aguardar a conclusão do deploy da Neural API no Render. Se o serviço não tiver deploy automático, iniciar o deploy da versão revisada no painel.
 2. Em RapidAPI → Hub Listing → Gateway → Firewall Settings, copiar **X-RapidAPI-Proxy-Secret** sem revelar ou publicar seu valor. Não usar a chave `X-RapidAPI-Key` do consumidor.
@@ -29,7 +31,7 @@ O gateway acrescenta `X-RapidAPI-Proxy-Secret` em cada requisição. O middlewar
 5. Manter os caminhos das cinco operações como estão. Não adicionar `/rapidapi` em cada endpoint, pois o prefixo já está na Base URL. Não é necessário recriar ou reimportar os endpoints.
 6. Testar as cinco operações novamente pelo RapidAPI, com os mesmos corpos sintéticos já validados; todas devem retornar 200. As duas rotas de cartões têm contratos diferentes: apenas Random Forest aceita `allowed_card_ids`.
 7. Abrir `/rapidapi/health` diretamente no navegador, sem cabeçalho: deve retornar **403**. Abrir `/health` diretamente deve continuar retornando **200**.
-8. Manter a listagem privada até finalizar esses testes e revisar a descrição dos modelos e as condições do plano, inclusive eventual taxa de banda da plataforma.
+8. Em uma nova listagem, manter privada até finalizar os testes e revisar a descrição e as condições do plano. A listagem atual foi publicada pelo responsável após essa revisão.
 
 Não é necessário instalar pacotes novos, criar banco ou enviar arquivos de modelo para essa proteção. O valor não deve ser fornecido ao assistente; o responsável o cadastra diretamente no Render.
 
